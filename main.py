@@ -10,9 +10,16 @@ db.execute("""
     );
 """)
 
-db.pretty_print("""
-    SELECT * 
-    FROM User;
+to_delete = ["1", "3", "5"]
+
+separator = ", "
+str_to_delete = separator.join(to_delete)
+
+db.execute("""
+    DELETE FROM User 
+    WHERE id IN (""" + str_to_delete + """);
 """)
+
+db.pretty_print("SELECT * FROM User")
 
 # db.print_tables(verbose=True)
