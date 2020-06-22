@@ -3,23 +3,25 @@ from smartninja_sql.sqlite import SQLiteDatabase
 db = SQLiteDatabase("hiking.sqlite")
 
 db.execute("""
-    CREATE TABLE IF NOT EXISTS User(
+    CREATE TABLE IF NOT EXISTS HikingGroupUser(
         id integer primary key autoincrement,
-        name text,
-        age integer
+        UserId integer,
+        HikingGroupId integer
     );
 """)
 
-to_delete = ["1", "3", "5"]
-
-separator = ", "
-str_to_delete = separator.join(to_delete)
-
-db.execute("""
-    DELETE FROM User 
-    WHERE id IN (""" + str_to_delete + """);
+db.pretty_print("""
+    SELECT
+        HikingGroup.Destination AS Destination,
+        HikingGroup.Name AS [Group],
+        COUNT(*) AS UsersInDestination
+    FROM User
+    JOIN HikingGroup
+    JOIN HikingGroupUser
+    USING (UserId, HikingGroupId)
 """)
 
-db.pretty_print("SELECT * FROM User")
+
+# db.pretty_print("SELECT * FROM HikingGroupUser")
 
 # db.print_tables(verbose=True)
